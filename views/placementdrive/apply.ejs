@@ -1,0 +1,209 @@
+<%layout("layout/placement/boilerplate.ejs")%>
+
+    <body class="bg-light">
+        <!-- Header Section -->
+        <header class="bg-white shadow-sm sticky-top">
+            <div class="container py-3">
+                <div class="d-flex align-items-center">
+                    <a href="/placementdrive" class="btn btn-outline-secondary me-3">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div>
+                        <h1 class="h4 mb-0">
+                            <i class="fas fa-edit text-primary me-2"></i>
+                            Application Form
+                        </h1>
+                        <p class="text-muted mb-0">Apply for <%= companydetails.jobrole %> at <%=
+                                    companydetails.companyname %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Form -->
+        <div class="container py-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form id="placementApplicationForm" action="/placementdrive/<%=companydetails._id %>/apply"
+                        method="POST" class="needs-validation myForm" novalidate enctype="multipart/form-data">
+
+                        <!-- Personal Information -->
+                        <section class="mb-5">
+                            <h2 class="h5 mb-4 text-primary border-bottom pb-2">
+                                <i class="fas fa-user-circle me-2"></i>Personal Information
+                            </h2>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="fullName" class="form-label">Full Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="fullName" name="fullName" required>
+                                    <div class="invalid-feedback">
+                                        Please provide your full name.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="universityId" class="form-label">University ID <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="universityId" name="universityId"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        Please provide your university ID.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email <span
+                                            class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid email address.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone Number <span
+                                            class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required
+                                        pattern="[0-9]{10}">
+                                    <div class="invalid-feedback">
+                                        Please provide a valid 10-digit phone number.
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Academic Details -->
+                        <section class="mb-5">
+                            <h2 class="h5 mb-4 text-primary border-bottom pb-2">
+                                <i class="fas fa-graduation-cap me-2"></i>Academic Details
+                            </h2>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="degreeProgram" class="form-label">Degree Program <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="degreeProgram" name="degreeProgram" required>
+                                        <option value="">Select Degree</option>
+                                        <option value="B.Tech">B.Tech</option>
+                                        <option value="B.E">B.E</option>
+                                        <option value="MCA">MCA</option>
+                                        <option value="M.Tech">M.Tech</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select your degree program.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="branch" class="form-label">Branch/Specialization <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="branch" name="branch" required>
+                                    <div class="invalid-feedback">
+                                        Please provide your branch/specialization.
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="cgpa" class="form-label">CGPA/Percentage <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" class="form-control" id="cgpa" name="cgpa" required
+                                        min="0" max="10">
+                                    <div class="invalid-feedback">
+                                        Please provide a valid CGPA/Percentage (0-10).
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="activeBacklogs" class="form-label">Active Backlogs (if any)</label>
+                                    <input type="number" class="form-control" id="activeBacklogs" name="activeBacklogs"
+                                        min="0">
+                                    <div class="invalid-feedback">
+                                        Please provide a valid number (0 or more).
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="passingYear" class="form-label">Year of Passing <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="passingYear" name="passingYear" required>
+                                        <option value="">Select Year</option>
+                                        <% for(let year=new Date().getFullYear(); year <=new Date().getFullYear()+2;
+                                            year++) { %>
+                                            <option value="<%= year %>">
+                                                <%= year %>
+                                            </option>
+                                            <% } %>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select your year of passing.
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Skills & Qualifications -->
+                        <section class="mb-5">
+                            <h2 class="h5 mb-4 text-primary border-bottom pb-2">
+                                <i class="fas fa-code me-2"></i>Skills & Qualifications
+                            </h2>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="technicalSkills" class="form-label">Technical Skills <span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="technicalSkills" name="technicalSkills" rows="3"
+                                        placeholder="Java, Python, SQL" required></textarea>
+                                    <div class="invalid-feedback">
+                                        Please list your technical skills.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="certifications" class="form-label">Certifications (if any)</label>
+                                    <textarea class="form-control" id="certifications" name="certifications" rows="3"
+                                        placeholder="AWS Certified, Oracle Certified, etc."></textarea>
+                                    <div class="invalid-feedback">
+                                        Please provide valid certification details.
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- Resume Upload -->
+                        <div class="mb-4">
+                            <label for="resume" class="form-label">upload resume upto 500kb<span
+                                    class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="resume" id="resume" required>
+                        </div>
+
+
+                        <!-- Declaration -->
+                        <section class="mb-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="declaration" name="declaration"
+                                    value="true" required>
+                                <label class="form-check-label" for="declaration">
+                                    I declare that all information provided is accurate and I understand that any false
+                                    information may lead to disqualification. <span class="text-danger">*</span>
+                                </label>
+                                <div class="invalid-feedback">
+                                    You must agree to the declaration to proceed.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between border-top pt-4">
+                            <button type="reset" class="btn btn-outline-secondary px-4">
+                                <i class="fas fa-times me-2"></i>Reset
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+
+        </script>
+        <script src="/js/form_valid.js"></script>
+
+    </body>
+
+    </html>

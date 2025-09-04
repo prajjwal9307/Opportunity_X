@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Details - <%=detail.teamName%></title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c63ff;
+            --secondary-color: #4d44db;
+            --accent-color: #ff6584;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .team-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.2);
+        }
+        
+        .detail-card {
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .detail-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .member-badge {
+            background-color: #e0e0ff;
+            color: var(--secondary-color);
+            border-radius: 50px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-btn {
+            transition: all 0.2s;
+        }
+        
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Team Header -->
+        <div class="team-header p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="mb-2"><i class="fas fa-users me-2"></i><%=detail.teamName%></h1>
+                    <p class="lead mb-0">Hackathon Team Details</p>
+                </div>
+                <span class="badge bg-light text-dark fs-6">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    <%= new Date(detail.registrationDate).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    }) %>
+                </span>
+            </div>
+        </div>
+
+        <!-- Team Details -->
+        <div class="row">
+            <!-- Leader Information -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 detail-card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-crown text-warning me-2"></i>Team Leader</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                     style="width: 50px; height: 50px;">
+                                    <i class="fas fa-user fa-lg"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="mb-1"><%=detail.leaderName%></h5>
+                                <p class="text-muted mb-1"><%=detail.leaderEmail%></p>
+                                <p class="text-muted"><%=detail.leaderContact%></p>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <a href="mailto:<%=detail.leaderEmail%>" 
+                               class="btn btn-outline-primary contact-btn me-2">
+                                <i class="fas fa-envelope me-1"></i>Email
+                            </a>
+                            <a href="tel:<%=detail.leaderContact%>" 
+                               class="btn btn-outline-success contact-btn">
+                                <i class="fas fa-phone me-1"></i>Call
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Members -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 detail-card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Team Members</h5>
+                    </div>
+                    <div class="card-body">
+                        <% 
+                        // Parse the teamMembers array which contains stringified JSON
+                        let members = [];
+                        try {
+                            members = JSON.parse(detail.teamMembers[0]);
+                        } catch(e) {
+                            members = detail.teamMembers;
+                        }
+                        %>
+                        
+                        <% if(members && members.length > 0) { %>
+                            <div class="d-flex flex-wrap">
+                                <% members.forEach(member => { %>
+                                    <span class="member-badge">
+                                        <i class="fas fa-user-circle me-1"></i>
+                                        <%= member %>
+                                    </span>
+                                <% }); %>
+                            </div>
+                        <% } else { %>
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No additional team members listed
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Details -->
+        <div class="card mb-4 detail-card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Registration Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><strong><i class="fas fa-calendar-check me-2"></i>Registration Date:</strong></p>
+                        <p><%= new Date(detail.registrationDate).toLocaleString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="d-grid">
+            <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Teams List
+            </a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>

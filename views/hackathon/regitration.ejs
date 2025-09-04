@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon Team Registration</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .registration-card {
+            max-width: 700px;
+            margin: 2rem auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .registration-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .form-section {
+            padding: 2rem;
+        }
+        .team-member-badge {
+            background-color: #e9ecef;
+            border-radius: 20px;
+            padding: 5px 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .remove-member {
+            cursor: pointer;
+            margin-left: 8px;
+            color: #dc3545;
+        }
+        #teamMembersContainer {
+            min-height: 50px;
+            border: 1px dashed #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .member-limit-reached {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .btn-disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="card registration-card">
+            <div class="registration-header">
+                <h2><i class="fas fa-users me-2"></i> Team Registration</h2>
+                <p class="mb-0">Register your team for <%= hackathon.title %></p>
+                <p class="mt-2 mb-0"><small>Team size limit: <%= hackathon.group_member %> members</small></p>
+            </div>
+            
+            <div class="form-section">
+                <form id="registrationForm" action="/hackathon/<%= hackathon._id %>/register" method="POST" class="needs-validation" novalidate>
+                    <!-- Hidden fields -->
+                    <input type="hidden" name="hackathonId" value="<%= hackathon._id %>">
+                    <input type="hidden" id="maxMembers" value="<%= hackathon.group_member %>">
+                    
+                    <!-- Team Name -->
+                    <div class="mb-4">
+                        <label for="teamName" class="form-label fw-bold">
+                            <i class="fas fa-flag me-2"></i> Team Name
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="teamName" name="teamName" required>
+                        <div class="form-text">Choose a creative name for your team (max 50 chars)</div>
+                    </div>
+                    
+                    <!-- Leader Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="leaderName" class="form-label fw-bold">
+                                <i class="fas fa-crown me-2"></i> Leader Name
+                            </label>
+                            <input type="text" class="form-control" id="leaderName" name="leaderName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="leaderEmail" class="form-label fw-bold">
+                                <i class="fas fa-envelope me-2"></i> Leader Email
+                            </label>
+                            <input type="email" class="form-control" id="leaderEmail" name="leaderEmail" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Leader Contact -->
+                    <div class="mb-4">
+                        <label for="leaderContact" class="form-label fw-bold">
+                            <i class="fas fa-phone me-2"></i> Leader Contact Number
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">+91</span>
+                            <input type="tel" class="form-control" id="leaderContact" name="leaderContact" 
+                                   pattern="[0-9]{10}" required>
+                        </div>
+                        <div class="form-text">10-digit mobile number without spaces or special characters</div>
+                    </div>
+                    
+                    <!-- Team Members -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-user-friends me-2"></i> Team Members 
+                            <span id="memberCountDisplay">(0/<%= hackathon.group_member %> added)</span>
+                        </label>
+                        <div id="teamMembersContainer" class="mb-2"></div>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="newMember" placeholder="Add team member name" required>
+                            <button class="btn btn-primary" type="button" id="addMemberBtn">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                        <input type="hidden" id="teamMembers" name="teamMembers">
+                        <div id="memberLimitMessage" class="form-text">
+                            p at least 1 team member (max <%= hackathon.group_member %>) 
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i> Submit Registration
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+     <script src="/js/form_valid.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const members = [];
+            const membersContainer = document.getElementById('teamMembersContainer');
+            const teamMembersInput = document.getElementById('teamMembers');
+            const newMemberInput = document.getElementById('newMember');
+            const addMemberBtn = document.getElementById('addMemberBtn');
+            const maxMembers = parseInt(document.getElementById('maxMembers').value);
+            const memberCountDisplay = document.getElementById('memberCountDisplay');
+            const memberLimitMessage = document.getElementById('memberLimitMessage');
+            const registrationForm = document.getElementById('registrationForm');
+            
+            // Update member count display
+            function updateMemberCount() {
+                const currentCount = members.length;
+                memberCountDisplay.textContent = `(${currentCount}/${maxMembers} added)`;
+                
+                if (currentCount >= maxMembers) {
+                    memberLimitMessage.innerHTML = `<span class="member-limit-reached">Maximum team size reached (${maxMembers} members)</span>`;
+                    newMemberInput.disabled = true;
+                    addMemberBtn.disabled = true;
+                    addMemberBtn.classList.add('btn-disabled');
+                } else {
+                    memberLimitMessage.innerHTML = `Add at least 1 team member (max ${maxMembers}) including Teamleader`;
+                    newMemberInput.disabled = false;
+                    addMemberBtn.disabled = false;
+                    addMemberBtn.classList.remove('btn-disabled');
+                }
+            }
+            
+            // Add member function
+            addMemberBtn.addEventListener('click', function() {
+                const memberName = newMemberInput.value.trim();
+                
+                if (!memberName) return;
+                
+                if (members.includes(memberName)) {
+                    alert('This member is already added');
+                    return;
+                }
+                
+                if (members.length >= maxMembers) {
+                    alert(`Maximum team size is ${maxMembers} members`);
+                    return;
+                }
+                
+                members.push(memberName);
+                updateMembersDisplay();
+                updateMemberCount();
+                newMemberInput.value = '';
+                newMemberInput.focus();
+            });
+            
+            // Remove member function
+            function setupRemoveButtons() {
+                document.querySelectorAll('.remove-member').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const memberName = this.getAttribute('data-member');
+                        const index = members.indexOf(memberName);
+                        if (index !== -1) {
+                            members.splice(index, 1);
+                            updateMembersDisplay();
+                            updateMemberCount();
+                        }
+                    });
+                });
+            }
+            
+            // Update display and hidden input
+            function updateMembersDisplay() {
+                membersContainer.innerHTML = members.length > 0 
+                    ? members.map(member => `
+                        <span class="team-member-badge">
+                            ${member}
+                            <span class="remove-member" data-member="${member}">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </span>
+                    `).join('')
+                    : '<div class="text-muted">No members added yet</div>';
+                
+                teamMembersInput.value = JSON.stringify(members);
+                setupRemoveButtons();
+            }
+         
+            // Allow adding members with Enter key
+            newMemberInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addMemberBtn.click();
+                }
+            });
+            
+            // Initialize
+            updateMembersDisplay();
+            updateMemberCount();
+        });
+    </script>
+</body>
+</html>

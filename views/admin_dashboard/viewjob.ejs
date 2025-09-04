@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Listings</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .company-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .company-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .company-name {
+            color: #0d6efd;
+            font-weight: 600;
+        }
+        .job-role {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .company-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="company-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4 fw-bold mb-3">Current Opportunities</h1>
+                    <p class="lead">Browse through our available company placements</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-container">
+                    <form id="searchForm" class="d-flex">
+                        <div class="input-group">
+                            <input type="text" id="searchInput" class="form-control form-control-lg" 
+                                   placeholder="Search by company name..." 
+                                   aria-label="Search companies">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                            <button id="clearSearch" class="btn btn-outline-secondary" type="button">
+                                Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a href="/admin/dashboard" class="btn btn-outline-secondary">
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="row g-4" id="companyContainer">
+            <% for(let company of allcompany) { %>
+            <div class="col-md-6 col-lg-4 company-item" 
+                 data-company="<%= company.companyname.toLowerCase() %>">
+                <a href="/admin/jobapplication/<%=company.id%>/students" class="text-decoration-none">
+                    <div class="company-card card h-100 border-0">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
+                                        <i class="bi bi-building text-primary fs-4"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h5 class="company-name mb-1"><%= company.companyname %></h5>
+                                    <p class="job-role mb-0"><i class="bi bi-briefcase me-1"></i> <%= company.jobrole %></p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <% for(let skill of company.skills) { %>
+                                    <span class="badge bg-light text-dark"><%= skill %></span>
+                                <% } %>
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span><i class="bi bi-calendar me-1"></i> Drive: <%= new Date(company.drivedate).toLocaleDateString() %></span>
+                                <span><i class="bi bi-cash-coin me-1"></i> ₹<%= company.package %> LPA</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 text-end">
+                            <span class="badge bg-primary bg-opacity-10 text-primary">Details <i class="bi bi-arrow-right ms-1"></i></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Empty State (if no companies) -->
+    <% if(allcompany.length === 0) { %>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i> No companies are currently hiring. Please check back later.
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- No Results State (hidden by default) -->
+    <div class="container d-none" id="noResults">
+        <div class="row">
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> No companies match your search criteria.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Search Functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            const clearSearch = document.getElementById('clearSearch');
+            const companyContainer = document.getElementById('companyContainer');
+            const companyItems = document.querySelectorAll('.company-item');
+            const noResults = document.getElementById('noResults');
+            
+            // Search function
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                let hasVisibleItems = false;
+
+                companyItems.forEach(item => {
+                    const companyName = item.dataset.company;
+                    
+                    if (companyName.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        hasVisibleItems = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // Show/hide no results message
+                if (!hasVisibleItems && searchTerm !== '') {
+                    noResults.classList.remove('d-none');
+                    companyContainer.classList.add('d-none');
+                } else {
+                    noResults.classList.add('d-none');
+                    companyContainer.classList.remove('d-none');
+                }
+            }
+
+            // Event listeners
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                performSearch();
+            });
+
+            searchInput.addEventListener('input', function() {
+                performSearch();
+            });
+
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                performSearch();
+            });
+        });
+    </script>
+</body>
+</html>

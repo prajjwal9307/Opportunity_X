@@ -1,0 +1,32 @@
+<% if(success && success.length){ %>
+    <div class="alert alert-success alert-dismissible fade show custom-alert" role="alert">
+        <%= success %>
+        <span class="btn"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></span>
+    </div>
+<% } %>
+<% if(error && error.length){ %>
+    <div class="alert alert-danger alert-dismissible fade show custom-alert" role="alert">
+        <%= error %>
+        <span class="btn"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></span>
+    </div>
+<% } %>
+<style>
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px; 
+    z-index: 2000;
+    width: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-size: 16px;
+    padding: 10px 16px;
+}
+.btn{
+    padding-left: 10px;
+}
+.btn-close:focus {
+    outline: none;
+    box-shadow: none;
+}
+</style>
+

@@ -1,0 +1,177 @@
+<% layout("layout/placement/boilerplate.ejs") %>
+
+<body class="bg-light">
+  <div class="container py-5">
+
+    <!-- Profile Form Card -->
+    <div class="card shadow-lg mb-4 border-0 rounded-3">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0"><%= student.firstname %> Profile</h3>
+      </div>
+      <div class="card-body">
+        <form action="/<%=student.author%>/profile" method="POST" enctype="multipart/form-data">
+
+          <!-- Personal Info -->
+          <h5 class="text-secondary">Personal Information</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label class="form-label">First Name</label>
+              <input id="fn" type="text" class="form-control" name="firstname" value="<%= student.firstname %>">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Middle Name</label>
+              <input id="mn" type="text" class="form-control" name="middlename" value="<%= student.middlename %>">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Last Name</label>
+              <input id="ln" type="text" class="form-control" name="lastname" value="<%= student.lastname %>">
+            </div>
+          </div>
+
+          <!-- Past Education -->
+          <h5 class="text-secondary">Past Education</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label">10th Marks</label>
+              <input type="text" class="form-control" name="tenmark" value="<%= student.tenmark %>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">12th Marks</label>
+              <input type="text" class="form-control" name="twelthmark" value="<%= student.twelthmark %>">
+            </div>
+          </div>
+
+          <!-- Current Education -->
+          <h5 class="text-secondary">Current Education</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-md-3">
+              <label class="form-label">CGPA</label>
+              <input type="text" class="form-control" name="cgpa" value="<%= student.cgpa %>">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Branch</label>
+              <input type="text" class="form-control" name="branch" value="<%= student.branch %>">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Current Year</label>
+              <input type="text" class="form-control" name="currentyear" value="<%= student.currentyear %>">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Passing Year</label>
+              <input type="text" class="form-control" name="passingyear" value="<%= student.passingyear %>">
+            </div>
+          </div>
+
+          <!-- Skills -->
+          <h5 class="text-secondary">Skills</h5>
+          <div class="mb-3">
+            <input type="text" class="form-control" name="skills" 
+                   value="<%= student.skills ? student.skills.join(', ') : '' %>" 
+                   placeholder="Add skills (comma separated)">
+            <div class="mt-2">
+              <% if (student.skills && student.skills.length > 0) { %>
+                <% student.skills.forEach(skill => { %>
+                  <span class="badge bg-info text-dark me-1 mb-1"><%= skill %></span>
+                <% }) %>
+              <% } else { %>
+                <span class="text-muted">No skills added</span>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Resume -->
+          <h5 class="text-secondary">upload resume upto 500kb</h5>
+          <% if (student.resume.url) { %>
+            <p>
+              <a href="<%=student.resume.url%>" target="_blank" class="btn btn-outline-primary btn-sm">
+                View Uploaded Resume
+              </a>
+            </p>
+          <% } %>
+          <div class="mb-4">
+            <input type="file" class="form-control" name="resume">
+          </div>
+
+          <button type="submit" class="btn btn-success btn-lg w-100">Update Profile</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Experience & Applied Jobs -->
+    <div class="row">
+      <!-- Experience -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Experience</h5>
+          </div>
+          <div class="card-body">
+            <% if (experiances && experiances.length > 0) { %>
+              <div class="list-group">
+                <% experiances.forEach(exp => { %>
+                  <a href="/experiance/<%=exp._id%>" class="list-group-item list-group-item-action">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="mb-1"><%=exp.company%> - <%=exp.role%></h6>
+                      <small class="text-muted"><%= exp.interviewDate.toDateString() %></small>
+                    </div>
+                    <p class="mb-0"><span class="badge bg-secondary"><%=exp.jobType%></span></p>
+                  </a>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No experiences added.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Applied Jobs -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Applied Jobs</h5>
+          </div>
+          <div class="card-body">
+            <% if (applications && applications.length > 0) { %>
+              <div class="list-group">
+                <% applications.forEach(appli => { %>
+                  <a href="/placementdrive/<%=appli.companyId._id%>" class="list-group-item list-group-item-action">
+                    <h6 class="mb-1"><%=appli.companyId.companyname%> - <%=appli.companyId.jobrole%></h6>
+                    <p class="mb-1">Package: ₹<%=appli.companyId.package%> LPA | Venue: <%=appli.companyId.venue%></p>
+                    <small class="text-muted">Drive: <%=appli.companyId.drivedate.toDateString()%> | Applied: <%=appli.appliedAt.toDateString()%></small>
+                    <br>
+                    <span class="badge 
+                      <%= appli.status === 'selected' ? 'bg-success' : 
+                           appli.status === 'rejected' ? 'bg-danger' : 
+                           appli.status === 'shortlisted' ? 'bg-warning text-dark' : 'bg-secondary' %>">
+                      <%= appli.status %>
+                    </span>
+                  </a>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No jobs applied yet.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .card {
+    transition: transform .2s ease-in-out;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  .list-group-item {
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+</style>

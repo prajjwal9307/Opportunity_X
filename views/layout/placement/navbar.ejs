@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <title>OpportunityX</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0D1216;
+            padding: 0.3rem 0.3rem;
+            border-radius: 5px;
+        }
+
+        a:hover {
+            background-color: rgb(241, 240, 240);
+        }
+
+        .login {
+            background-color: #8B3DFF;
+        }
+
+        .signup,
+        .logout {
+            border: 1px solid rgb(246, 227, 227);
+        }
+
+        nav {
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #fff;
+        }
+
+        .nav-toggle {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* Mobile styles */
+        @media(max-width:700px) {
+            
+            .nav-option {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                width: 250px;
+                height: 100%;
+                background: #fff;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 2rem 1rem;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+                transition: left 0.3s ease-in-out;
+                z-index: 2000;
+            }
+
+            .nav-option.show {
+                left: 0;
+            }
+
+            .nav-option li {
+                display: block !important;
+                margin: 0.5rem 0;
+            }
+
+            .nav-toggle {
+                display: block !important;
+            }
+            
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="p-2 border-bottom">
+        <div class="d-flex justify-content-between align-items-center navbar">
+            <div class="fw-bold">
+                <a href="/home">
+                    <img src="/titleimg/Opportunity.png" alt="" style="width: 30px; height: 30px;">
+            </a>
+                </div>
+            <div>
+                <ul class="d-flex list-unstyled mb-0 gap-4 nav-option">
+                    <li><a href="/placementdrive">Placement</a></li>
+                    <li><a href="/hackathon/all">Hackathon</a></li>
+                    <li><a href="/dsa/allquestion">DSA practice</a></li>
+                    <li><a href="/experiance/all">Experience</a></li>
+                </ul>
+            </div>
+            <div>
+                <ul class="d-flex list-unstyled mb-0 gap-3">
+                    <%if(isAuthenticated){%>
+                        <li><a href="/logout" class="logout">Logout</a></li>
+                        <%if(currentUser.role==="admin"){%>
+                            <li><a href="/admin/dashboard">Admin</a></li>
+                        <%}else{%>
+                        <li><a href="/<%=currentUser._id%>/profile">Profile</a></li>
+                        <%}%>
+                    <%}%>
+                    <%if(!isAuthenticated){%>
+                        <li><a href="/signup" class="signup">Signup</a></li>
+                        <li><a href="/login" class="login">Login</a></li>
+                    <%}%>
+                    <li class="nav-toggle">☰</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+
+<script>
+    const toggleBtn = document.querySelector(".nav-toggle");
+    const navOptions = document.querySelector(".nav-option");
+
+    toggleBtn.addEventListener("click", () => {
+        navOptions.classList.toggle("show");
+    });
+</script>
+
+</html>

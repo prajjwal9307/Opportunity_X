@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= detail.fullName %> - Application Details</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .detail-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .detail-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .status-badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        .status-pending { background-color: #ffc107; color: #000; }
+        .status-shortlisted { background-color: #0dcaf0; color: #000; }
+        .status-selected { background-color: #198754; color: #fff; }
+        .status-rejected { background-color: #dc3545; color: #fff; }
+        .document-link {
+            transition: all 0.3s ease;
+        }
+        .document-link:hover {
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card detail-card mb-4">
+                    <div class="card-header detail-header py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="mb-0">
+                                <i class="bi bi-person-badge me-2"></i>
+                                <%= detail.fullName %>
+                            </h2>
+                            <span class="status-badge badge <%= 
+                                detail.status === 'selected' ? 'status-selected' : 
+                                detail.status === 'shortlisted' ? 'status-shortlisted' : 
+                                detail.status === 'rejected' ? 'status-rejected' : 'status-pending' 
+                            %>">
+                                <%= detail.status.toUpperCase() %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Personal Information -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">
+                                            <i class="bi bi-person-lines-fill me-2"></i>
+                                            Personal Information
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4">University ID</dt>
+                                            <dd class="col-sm-8"><%= detail.universityId %></dd>
+                                            
+                                            <dt class="col-sm-4">Email</dt>
+                                            <dd class="col-sm-8">
+                                                <a href="mailto:<%= detail.email %>"><%= detail.email %></a>
+                                            </dd>
+                                            
+                                            <dt class="col-sm-4">Phone</dt>
+                                            <dd class="col-sm-8"><%= detail.phone %></dd>
+                                            
+                                            <dt class="col-sm-4">Program</dt>
+                                            <dd class="col-sm-8">
+                                                <%= detail.degreeProgram %>
+                                                <span class="text-muted">(<%= detail.branch %>)</span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Academic Information -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">
+                                            <i class="bi bi-journal-bookmark me-2"></i>
+                                            Academic Information
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4">CGPA</dt>
+                                            <dd class="col-sm-8"><%= detail.cgpa %></dd>
+                                            
+                                            <dt class="col-sm-4">Backlogs</dt>
+                                            <dd class="col-sm-8"><%= detail.activeBacklogs %></dd>
+                                            
+                                            <dt class="col-sm-4">Passing Year</dt>
+                                            <dd class="col-sm-8"><%= detail.passingYear %></dd>
+                                            
+                                            <dt class="col-sm-4">Eligibility</dt>
+                                            <dd class="col-sm-8">
+                                                <span class="badge <%= detail.meetsEligibility ? 'bg-success' : 'bg-danger' %>">
+                                                    <%= detail.meetsEligibility ? 'Meets Criteria' : 'Does Not Meet' %>
+                                                </span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Skills & Certifications -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-tools me-2"></i>
+                                    Skills & Certifications
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Technical Skills</h6>
+                                        <p class="text-muted"><%= detail.technicalSkills %></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Certifications</h6>
+                                        <p class="text-muted"><%= detail.certifications || 'None specified' %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Documents -->
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-files me-2"></i>
+                                    Documents
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="<%= detail.resume %>" class="text-decoration-none document-link" target="_blank">
+                                            <i class="bi bi-file-earmark-pdf me-2"></i>
+                                            View Resume
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <% if (detail.marksheet) { %>
+                                            <a href="<%= detail.marksheet %>" class="text-decoration-none document-link" target="_blank">
+                                                <i class="bi bi-file-earmark-text me-2"></i>
+                                                View Marksheet
+                                            </a>
+                                        <% } else { %>
+                                            <span class="text-muted">No marksheet uploaded</span>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="/admin/jobapplication/<%= detail.companyId %>/students" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Applications
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

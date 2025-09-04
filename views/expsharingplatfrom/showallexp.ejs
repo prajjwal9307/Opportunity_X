@@ -1,0 +1,169 @@
+
+<% layout("layout/placement/boilerplate.ejs") %>
+  <div class="container py-5">
+    <!-- Header Section -->
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold text-primary mb-3">Interview Experiences</h1>
+      <p class="lead text-muted">Learn from real interview experiences shared by your peers</p>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="bg-light p-4 rounded-3 shadow-sm mb-5">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <div class="input-group">
+            <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Search by company...">
+            <button id="searchButton" class="btn btn-primary btn-lg" type="button">
+              <i class="fas fa-search me-1"></i> Search
+            </button>
+          </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <a href="/experiance/add" class="btn btn-success btn-lg">
+            <i class="fas fa-plus me-2"></i>Share Experience
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <% if(allInterviewExperience.length===0) { %>
+      <div class="text-center py-5 my-5">
+        <i class="far fa-folder-open fa-4x text-muted mb-4"></i>
+        <h3 class="mb-3">No interview experiences found</h3>
+        <p class="text-muted mb-4">Be the first to share your interview experience!</p>
+        <a href="/experiance/add" class="btn btn-primary btn-lg px-4">
+          <i class="fas fa-plus me-2"></i>Share Now
+        </a>
+      </div>
+      <% } else { %>
+        <!-- No Results Message -->
+        <div id="noResults" class="text-center py-5 my-5 d-none">
+          <i class="fas fa-search fa-4x text-muted mb-4"></i>
+          <h3 class="mb-3">No matching experiences found</h3>
+          <p class="text-muted">Try different search terms or filters</p>
+        </div>
+
+        <!-- Experiences Grid -->
+        <div id="experiencesContainer" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          <% for(let InterviewExperience of allInterviewExperience) { %>
+            <div class="col experience-item" data-company="<%= InterviewExperience.company.toLowerCase() %>"
+              data-role="<%= InterviewExperience.role.toLowerCase() %>"
+              data-type="<%= InterviewExperience.jobType.toLowerCase() %>">
+              <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0">
+                    <%= InterviewExperience.company %>
+                  </h5>
+                  <span class="badge bg-white text-primary">
+                    <%= InterviewExperience.jobType %>
+                  </span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <%= InterviewExperience.role %>
+                  </h5>
+                  <div class="d-flex align-items-center text-muted mb-3">
+                    <i class="far fa-calendar-alt me-2"></i>
+                    <span>
+                      <%= new Date(InterviewExperience.interviewDate).toLocaleDateString() %>
+                    </span>
+                  </div>
+                  <p class="card-text text-muted mb-4">Click to read about this interview experience...</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <a href="/experiance/<%=InterviewExperience._id%>" class="btn btn-outline-primary btn-sm">
+                      <i class="fas fa-book-open me-2"></i>Read Full
+                    </a>
+                    <span class="text-muted">
+                      <i class="fas fa-user-circle me-1"></i>
+                      <%= InterviewExperience.author.username || 'Anonymous' %>
+                    </span>
+                  </div>
+                  <div class="d-flex justify-content-between mt-3">
+                    <!-- Add like -->
+                    <a href="/experiance/<%=InterviewExperience._id%>/upvotes" class="text-decoration-none upvote-link">
+                      <i class="far fa-thumbs-up me-1"></i>
+                      <span class="upvote-count">
+                        <%= InterviewExperience.upvotes %>
+                      </span>
+                    </a>
+                    <a href="/experiance/<%=InterviewExperience._id%>" class="text-decoration-none">
+                      <i class="far fa-comment me-1"></i> Discuss
+                    </a>
+                    <% if ( currentUser && ( currentUser.role==="admin" ||
+                      currentUser._id.toString()===InterviewExperience.author._id.toString() ) ) { %>
+                      <a href="/experiance/<%= InterviewExperience._id %>/delete"
+                        class="text-decoration-none text-danger">
+                        <i class="far fa-trash-can"></i>
+                      </a>
+                      <% } %>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+        </div>
+        <% } %>
+  </div>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('searchInput');
+      const searchButton = document.getElementById('searchButton');
+      const experienceItems = document.querySelectorAll('.experience-item');
+      const noResults = document.getElementById('noResults');
+
+      function performCompanySearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        let hasResults = false;
+
+        experienceItems.forEach(item => {
+          const companyName = item.dataset.company;
+
+          if (companyName.includes(searchTerm)) {
+            item.style.display = 'block';
+            hasResults = true;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        // Show/hide no results message
+        if (!hasResults && searchTerm.length > 0) {
+          noResults.style.display = 'block';
+        } else {
+          noResults.style.display = 'none';
+        }
+      }
+
+      // Search when button is clicked
+      searchButton.addEventListener('click', performCompanySearch);
+
+      // Search when Enter key is pressed
+      searchInput.addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') {
+          performCompanySearch();
+        }
+      });
+    });
+  </script>
+
+  <style>
+    .hover-shadow {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hover-shadow:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+  </style>

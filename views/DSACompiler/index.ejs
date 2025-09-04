@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Online Compiler</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+      --success: #10b981;
+      --error: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #f1f5f9;
+    }
+
+    /* Left Panel - Question Details */
+    .question-panel {
+      width: 40%;
+      padding: 2rem;
+      overflow-y: auto;
+      background: white;
+      border-right: 1px solid #e2e8f0;
+    }
+
+    .question-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .question-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .question-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .question-description {
+      line-height: 1.6;
+      color: #334155;
+      white-space: pre-wrap;
+    }
+
+    /* Right Panel - Compiler */
+    .compiler-panel {
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      background: #f8fafc;
+    }
+
+    .compiler-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .compiler-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .compiler-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    select {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    button {
+      padding: 0.5rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .code-editor {
+      flex-grow: 1;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      padding: 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      resize: none;
+      background: #ffffff;
+    }
+
+    .output-container {
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .output-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .output-title {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .output-content {
+      flex: 1;
+      overflow-y: auto;
+      background: #1e293b;
+      border-radius: 8px;
+    }
+
+    #output {
+      margin: 0;
+      padding: 1rem;
+      color: #f8fafc;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      min-height: 100%;
+    }
+
+    .status-indicator {
+      margin-left: auto;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #64748b;
+    }
+
+    .status-running {
+      background: #fef9c3;
+      color: #d97706;
+    }
+
+    .status-success {
+      background: #dcfce7;
+      color: #059669;
+    }
+
+    .status-error {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Left Panel - Question Details -->
+  <div class="question-panel">
+    <div class="question-header">
+      <h1 class="question-title">
+        <%=question.title%>
+      </h1>
+      <div class="question-tags">
+        <% question.tags.forEach(tag=> { %>
+          <span class="tag">
+            <%= tag.trim() %>
+          </span>
+          <% }); %>
+      </div>
+    </div>
+
+    <div class="question-description">
+      <h3>Description</h3>
+      <%=question.description%>
+    </div>
+
+    <hr>
+    <div class="question-description">
+      <h3>InputFormat</h3>
+      <%=question.inputFormat%>
+    </div>
+
+    <hr>
+    <div class="question-description">
+      <h3>OutputFormat</h3>
+      <%=question.outputFormat%>
+    </div>
+    <hr>
+    <!-- Sample test cases (you can add dynamically) -->
+    <div style="margin-top: 2rem;">
+      <h3 style="margin-bottom: 1rem; color: var(--dark);">Test Cases</h3>
+
+      <% if (question.testCases && question.testCases.length> 0) { %>
+        <% question.testCases.forEach((testCase, index)=> { %>
+          <div
+            style="background: #f1f5f9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid var(--primary);">
+            <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-weight: 600; color: var(--dark);">Test Case <%= index + 1 %></span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div>
+                <p style="font-weight: 500; margin-bottom: 0.5rem; color: var(--dark);">Input</p>
+                <pre
+                  style="background: white; padding: 0.75rem; border-radius: 4px; color: black; margin: 0; white-space: pre-wrap;"><%= testCase.input %></pre>
+              </div>
+              <div>
+                <p style="font-weight: 500; margin-bottom: 0.5rem; color: var(--dark);">Expected Output</p>
+                <pre
+                  style="background: white; padding: 0.75rem; border-radius: 4px; color: black; margin: 0; white-space: pre-wrap;"><%= testCase.output %></pre>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+            <% } else { %>
+              <div
+                style="background: #f1f5f9; padding: 1rem; border-radius: 8px; text-align: center; color: var(--gray);">
+                No test cases provided
+              </div>
+              <% } %>
+    </div>
+    <hr>
+    <div class="question-description">
+      <h3>Constraints</h3>
+      <%=question.constraints%>
+    </div>
+    <hr>
+    <div class="question-description">
+      <h3>Soulution</h3>
+      <%=question.solution%>
+    </div>
+
+  </div>
+
+  <!-- Right Panel - Compiler -->
+  <div class="compiler-panel">
+    <div class="compiler-header">
+      <h2 class="compiler-title">Online Compiler</h2>
+    </div>
+
+    <div class="compiler-controls">
+      <label for="language">Language:</label>
+      <select id="language">
+        <option value="62">Java (OpenJDK 17)</option>
+        <option value="71">Python (3.8.1)</option>
+        <option value="54">C++ (GCC 9.2)</option>
+        <option value="63">JavaScript (Node.js 12.14)</option>
+      </select>
+
+      <button onclick="runCode()">Run Code</button>
+    </div>
+
+    <div class="code-editor">
+      <textarea id="code" spellcheck="false"><% if (question.defaultCode) { %><%=question.defaultCode%><% } else { %>// Sample code based on selected language
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}<% } %></textarea>
+    </div>
+
+    <div class="output-container">
+      <div class="output-header">
+        <h3 class="output-title">Output</h3>
+        <span id="status" class="status-indicator">Ready</span>
+      </div>
+      <div class="output-content">
+        <pre id="output">Your program output will appear here</pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const languageSelect = document.getElementById('language');
+    const codeEditor = document.getElementById('code');
+    const outputElement = document.getElementById('output');
+    const statusIndicator = document.getElementById('status');
+
+    // Update code sample when language changes
+    languageSelect.addEventListener('change', function () {
+      const language = this.value;
+      let sampleCode = '';
+
+      switch (language) {
+        case '62': // Java
+          sampleCode = `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`;
+          break;
+        case '71': // Python
+          sampleCode = `print("Hello, World!")`;
+          break;
+        case '54': // C++
+          sampleCode = `#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!";\n    return 0;\n}`;
+          break;
+        case '63': // JavaScript
+          sampleCode = `console.log("Hello, World!");`;
+          break;
+      }
+
+      codeEditor.value = sampleCode;
+    });
+
+    async function runCode() {
+      const code = codeEditor.value;
+      const language_id = languageSelect.value;
+
+      outputElement.textContent = '';
+      statusIndicator.textContent = 'Running';
+      statusIndicator.className = 'status-indicator status-running';
+
+      try {
+        const response = await fetch("http://localhost:8080/dsa/compile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code, language_id })
+        });
+
+        const result = await response.json();
+
+        if (result.stdout) {
+          outputElement.textContent = result.stdout;
+          statusIndicator.textContent = 'Success';
+          statusIndicator.className = 'status-indicator status-success';
+        } else if (result.compile_output) {
+          outputElement.textContent = result.compile_output;
+          statusIndicator.textContent = 'Compile Error';
+          statusIndicator.className = 'status-indicator status-error';
+        } else if (result.stderr) {
+          outputElement.textContent = result.stderr;
+          statusIndicator.textContent = 'Runtime Error';
+          statusIndicator.className = 'status-indicator status-error';
+        } else {
+          outputElement.textContent = JSON.stringify(result, null, 2);
+          statusIndicator.textContent = 'Unknown Response';
+          statusIndicator.className = 'status-indicator status-error';
+        }
+      } catch (error) {
+        outputElement.textContent = `Network Error: ${error.message}`;
+        statusIndicator.textContent = 'Failed';
+        statusIndicator.className = 'status-indicator status-error';
+      }
+    }
+  </script>
+</body>
+
+</html>

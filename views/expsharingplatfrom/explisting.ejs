@@ -1,0 +1,140 @@
+<% layout("layout/placement/boilerplate.ejs") %>
+
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <h2 class="text-center mb-4">Share Your Interview Experience</h2>
+
+        <form id="interviewForm" action="/experiance/add" method="POST" class="needs-validation" novalidate>
+          <!-- Basic Information -->
+          <div class="card mb-4">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">Basic Information</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Company Name*</label>
+                  <input type="text" class="form-control" name="company" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Job Role*</label>
+                  <input type="text" class="form-control" name="role" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Job Type*</label>
+                  <select class="form-select" name="jobType" required>
+                    <option value="">Select job type</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Contract">Contract</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Interview Date*</label>
+                  <input type="date" class="form-control" name="interviewDate" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interview Rounds -->
+          <div class="card mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Interview Rounds</h5>
+              <button type="button" class="btn btn-sm btn-primary" id="addRoundBtn">Add Round</button>
+            </div>
+            <div class="card-body" id="roundsContainer">
+              <!-- Round 1 will be added here by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Overall Advice -->
+          <div class="card mb-4">
+            <div class="card-header bg-light">
+              <h5 class="mb-0">Your Suggestions*</h5>
+            </div>
+            <div class="card-body">
+              <textarea class="form-control" name="overallAdvice" rows="4" required></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2">Submit Experience</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="/js/form_valid.js"></script>
+  <script>
+    // Initialize with one round
+    let roundCount = 0;
+    addRound();
+
+    // Add new round
+    document.getElementById('addRoundBtn').addEventListener('click', addRound);
+
+    function addRound() {
+      const roundsContainer = document.getElementById('roundsContainer');
+      const roundId = roundCount++;
+
+      const roundDiv = document.createElement('div');
+      roundDiv.className = 'round mb-4 p-3 border rounded';
+      roundDiv.innerHTML = `
+      <div class="d-flex justify-content-between mb-3">
+        <h6>Round ${roundId + 1}</h6>
+        <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('.round').remove()">Remove</button>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Round Type*</label>
+          <select class="form-select" name="rounds[${roundId}][roundType]" required>
+            <option value="">Select round type</option>
+            <option value="Technical">Technical</option>
+            <option value="HR">HR</option>
+            <option value="Online Assessment">Online Assessment</option>
+            <option value="Coding Test">Coding Test</option>
+            <option value="System Design">System Design</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Duration*</label>
+          <input type="text" class="form-control" name="rounds[${roundId}][duration]" required>
+        </div>
+        <div class="col-12 mb-3">
+          <label class="form-label">Questions</label>
+          <div class="questions-container" id="questions-${roundId}">
+            <div class="question mb-2">
+              <input type="text" class="form-control" name="rounds[${roundId}][questions][0][questionText]" required>
+            </div>
+          </div>
+          <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="addQuestion(${roundId})">Add Question</button>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Your Experience</label>
+          <textarea class="form-control" name="rounds[${roundId}][experience]" rows="2" required></textarea>
+        </div>
+      </div>
+    `;
+
+      roundsContainer.appendChild(roundDiv);
+    }
+
+    // Add question to a round
+    function addQuestion(roundId) {
+      const questionsContainer = document.getElementById(`questions-${roundId}`);
+      const questionCount = questionsContainer.children.length;
+
+      const questionDiv = document.createElement('div');
+      questionDiv.className = 'question mb-2 d-flex';
+      questionDiv.innerHTML = `
+    <input type="text" class="form-control me-2" 
+         name="rounds[${roundId}][questions][${questionCount}][questionText]" 
+         placeholder="Question text" required>
+    <button type="button" class="btn btn-sm btn-danger" 
+          onclick="this.closest('.question').remove()">Remove</button>
+    `;
+
+      questionsContainer.appendChild(questionDiv);
+    }
+
+  </script>

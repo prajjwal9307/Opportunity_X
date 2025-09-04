@@ -1,0 +1,637 @@
+<%layout("layout/placement/boilerplate.ejs") %>
+
+<body>
+    <div>
+        <button class="mobile-toggle-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <!-- Main Container -->
+        <div class="main">
+            <!-- Sidebar -->
+            <div class="option">
+                <div class="sidebar-header">
+                    <h2>Admin Panel</h2>
+                </div>
+                <a href="/admin/dashboard" class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="/placementdrive/listing" class="nav-item">
+                    <i class="fas fa-briefcase"></i>Post Job
+                </a>
+                <a href="/hackathon/add" class="nav-item">
+                    <i class="fas fa-laptop-code"></i>Post Hackathon
+                </a>
+                <a href="/dsa/addquestion" class="nav-item">
+                    <i class="fas fa-code"></i>Post DSA Question
+                </a>
+                <a href="/admin/jobapplication" class="nav-item">
+                    <i class="fas fa-file-alt"></i>Job Applications
+                </a>
+                <a href="/admin/hackapplication" class="nav-item">
+                    <i class="fas fa-file-code"></i>Hackathon Applications
+                </a>
+                <div class="nav-divider"></div>
+                <a href="/logout" class="nav-item logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>Logout
+                </a>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="dashboard-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome to your administration dashboard</p>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="container">
+                    <div class="stat-card">
+                        <div class="stat-icon user-stat">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3><%= users.length %></h3>
+                            <p>Registered Users</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon company-stat">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3><%= placementDrives.length %></h3>
+                            <p>Companies Coming</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon application-stat">
+                            <i class="fas fa-file-import"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3><%= applications.length %></h3>
+                            <p>Job Applications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon hackathon-stat">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3><%= hackathons.length %></h3>
+                            <p>Running Hackathons</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Application Status -->
+                <div class="status-section">
+                    <h3>Application Status</h3>
+                    <div class="status_box">
+                        <div class="status selected">
+                            <h4>Selected</h4>
+                            <p><%= applications.filter(app=> app.status === 'selected').length %></p>
+                        </div>
+                        <div class="status rejected">
+                            <h4>Rejected</h4>
+                            <p><%= applications.filter(app=> app.status === 'rejected').length %></p>
+                        </div>
+                        <div class="status pending">
+                            <h4>Pending</h4>
+                            <p><%= applications.filter(app=> app.status === 'pending').length %></p>
+                        </div>
+                        <div class="status shortlisted">
+                            <h4>Shortlisted</h4>
+                            <p><%= applications.filter(app=> app.status === 'shortlisted').length %></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notification Section -->
+                <div class="notification-section">
+                    <h2>Notification</h2>
+                    <div class="notification-card">
+                        <div class="notification-content">
+                            <i class="fas fa-bell"></i>
+                            <div>
+                                <p>Job recommendation – get notified about the latest openings that match your profile.</p>
+                            </div>
+                        </div>
+                        <a href="/notify" class="notification-btn">Send Mail</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+
+<style>
+    /* Global Styles */
+    body {
+        background-color: #f5f7f9;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Mobile Toggle Button */
+    .mobile-toggle-btn {
+        display: none;
+        position: fixed;
+        top: 2vh;
+        left: 2vw;
+        z-index: 1000;
+        background: #4a6cf7;
+        border: none;
+        border-radius: 0.5vw;
+        width: 8vw;
+        height: 8vw;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .mobile-toggle-btn span {
+        display: block;
+        width: 5vw;
+        height: 0.5vh;
+        background: white;
+        margin: 0.5vh 0;
+        border-radius: 0.5vw;
+        transition: all 0.3s ease;
+    }
+    
+    /* Main Layout */
+    .main {
+        display: flex;
+        min-height: 100vh;
+    }
+    
+    /* Sidebar Styles */
+    .option {
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(180deg, #4a6cf7 0%, #2b4bc9 100%);
+        color: white;
+        font-weight: 500;
+        font-size: 1.2vw;
+        height: 100vh;
+        width: 20vw;
+        padding: 1vw;
+        gap: 2vh;
+        box-shadow: 0 0 1.5vw rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-header {
+        padding: 2vh 0;
+        text-align: center;
+        border-bottom: 0.1vh solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 2vh;
+    }
+    
+    .sidebar-header h2 {
+        font-size: 1.8vw;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .option a {
+        width: 90%;
+        padding: 1.5vh 1vw;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-left: 0.4vw solid transparent;
+        border-radius: 0.5vw;
+        display: flex;
+        align-items: center;
+    }
+    
+    .option a i {
+        margin-right: 1vw;
+        width: 2vw;
+        text-align: center;
+    }
+    
+    .option a:hover, .option a.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-left: 0.4vw solid white;
+    }
+    
+    .nav-divider {
+        height: 0.1vh;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 1vh 0;
+    }
+    
+    .logout-btn {
+        color: #ff6b6b;
+    }
+    
+    .logout-btn:hover {
+        background: rgba(255, 107, 107, 0.1);
+        color: #ff6b6b;
+        border-left: 0.4vw solid #ff6b6b !important;
+    }
+    
+    /* Content Area */
+    .content-area {
+        flex: 1;
+        padding: 2vh 3vw;
+        overflow-y: auto;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 3vh;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2.8vw;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5vh;
+    }
+    
+    .dashboard-header p {
+        color: #718096;
+        font-size: 1.6vw;
+        margin: 0;
+    }
+    
+    /* Stats Container */
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2vh;
+        justify-content: start;
+        margin: 1vh;
+    }
+    
+    .stat-card {
+        width: 15vw;
+        padding: 2vh;
+        height: auto;
+        text-align: start;
+        background-color: #ffffff;
+        border-radius: 1vw;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-0.5vh);
+        box-shadow: 0 1vh 1.5vw rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-icon {
+        width: 30%;
+        font-size: 2.5vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1vw;
+        height: 8vh;
+        color: white;
+    }
+    
+    .user-stat {
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+    }
+    
+    .company-stat {
+        background: linear-gradient(45deg, #a1c4fd, #c2e9fb);
+    }
+    
+    .application-stat {
+        background: linear-gradient(45deg, #ffecd2, #fcb69f);
+    }
+    
+    .hackathon-stat {
+        background: linear-gradient(45deg, #84fab0, #8fd3f4);
+    }
+    
+    .stat-info {
+        margin-left: 1vw;
+    }
+    
+    .stat-info h3 {
+        font-size: 2.8vw;
+        font-weight: 700;
+        margin: 0;
+        color: #2d3748;
+    }
+    
+    .stat-info p {
+        color: #718096;
+        font-size: 1.2vw;
+        margin: 0.5vh 0 0 0;
+    }
+    
+    /* Status Section */
+    .status-section {
+        margin: 3vh 1vh;
+    }
+    
+    .status-section h3 {
+        font-size: 2vw;
+        color: #2d3748;
+        margin-bottom: 2vh;
+    }
+    
+    .status_box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2vh;
+        justify-content: start;
+        margin: 1vh;
+    }
+    
+    .status {
+        width: 15vw;
+        padding: 2vh;
+        height: auto;
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: 1vw;
+        box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        border: none;
+    }
+    
+    .status:hover {
+        transform: scale(1.03);
+    }
+    
+    .status h4 {
+        font-size: 1.5vw;
+        margin: 0 0 1vh 0;
+    }
+    
+    .status p {
+        font-size: 2.5vw;
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    .selected {
+        background: rgba(72, 187, 120, 0.1);
+        color: #48bb78;
+    }
+    
+    .rejected {
+        background: rgba(245, 101, 101, 0.1);
+        color: #f56565;
+    }
+    
+    .pending {
+        background: rgba(246, 173, 85, 0.1);
+        color: #f6ad55;
+    }
+    
+    .shortlisted {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+    }
+    
+    /* Notification Section */
+    .notification-section {
+        margin: 3vh 1vh;
+    }
+    
+    .notification-section h2 {
+        font-size: 2vw;
+        color: #2d3748;
+        margin-bottom: 2vh;
+    }
+    
+    .notification-card {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 1vw;
+        padding: 2.5vh;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1vh 2vw rgba(0, 0, 0, 0.1);
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+    }
+    
+    .notification-content i {
+        font-size: 3.2vw;
+        margin-right: 1.5vw;
+    }
+    
+    .notification-content p {
+        opacity: 0.9;
+        font-size: 1.4vw;
+        margin: 0;
+    }
+    
+    .notification-btn {
+        background: white;
+        color: #667eea;
+        border: none;
+        border-radius: 0.6vw;
+        padding: 1.2vh 2vw;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1.2vw;
+    }
+    
+    .notification-btn:hover {
+        background: #f5f5f5;
+        transform: translateY(-0.2vh);
+        box-shadow: 0 0.5vh 1vw rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Responsive Styles */
+    @media(max-width:990px) {
+        .container {
+            justify-content: center;
+        }
+        
+        .stat-card {
+            width: 30vw;
+        }
+        
+        .status {
+            width: 30vw;
+        }
+        
+        .stat-info h3 {
+            font-size: 3.5vw;
+        }
+        
+        .stat-info p {
+            font-size: 1.8vw;
+        }
+        
+        .status h4 {
+            font-size: 2.2vw;
+        }
+        
+        .status p {
+            font-size: 3.5vw;
+        }
+    }
+    
+    @media(max-width:700px) {
+        .mobile-toggle-btn {
+            display: flex;
+            position: fixed;
+            top: 7vh;
+            left: 0;
+        }
+        
+        .option {
+            margin-left: -50vw;
+            position: fixed;
+            transition: all 0.3s ease-out;
+            height: 100vh;
+            width: 50vw;
+            font-size: 4vw;
+        }
+        
+        .option.active {
+            margin-left: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 5vw;
+        }
+        
+        .option a i {
+            margin-right: 3vw;
+            width: 6vw;
+        }
+        
+        .content-area {
+            padding: 8vh 4vw 2vh;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 6vw;
+        }
+        
+        .dashboard-header p {
+            font-size: 4vw;
+        }
+        
+        .container {
+            justify-content: center;
+            padding-top: 2vh;
+        }
+        
+        .stat-card {
+            width: 80vw;
+            margin-bottom: 2vh;
+        }
+        
+        .stat-icon {
+            font-size: 8vw;
+            height: 12vw;
+        }
+        
+        .stat-info h3 {
+            font-size: 8vw;
+        }
+        
+        .stat-info p {
+            font-size: 4vw;
+        }
+        
+        .status-section h3 {
+            font-size: 5vw;
+        }
+        
+        .status_box {
+            justify-content: center;
+        }
+        
+        .status {
+            width: 80vw;
+            margin-bottom: 2vh;
+        }
+        
+        .status h4 {
+            font-size: 5vw;
+        }
+        
+        .status p {
+            font-size: 8vw;
+        }
+        
+        .notification-section h2 {
+            font-size: 5vw;
+        }
+        
+        .notification-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 4vh 4vw;
+        }
+        
+        .notification-content {
+            flex-direction: column;
+            margin-bottom: 2vh;
+        }
+        
+        .notification-content i {
+            font-size: 10vw;
+            margin-right: 0;
+            margin-bottom: 2vh;
+        }
+        
+        .notification-content p {
+            font-size: 4vw;
+        }
+        
+        .notification-btn {
+            font-size: 4vw;
+            padding: 1.5vh 4vw;
+        }
+    }
+</style>
+
+<script>
+    // Toggle sidebar
+    document.querySelector('.mobile-toggle-btn').addEventListener('click', function() {
+        document.querySelector('.option').classList.toggle('active');
+    });
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+        const sidebar = document.querySelector('.option');
+        const toggleBtn = document.querySelector('.mobile-toggle-btn');
+        
+        if (window.innerWidth <= 700 && 
+            !sidebar.contains(event.target) && 
+            !toggleBtn.contains(event.target) &&
+            sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+        }
+    });
+</script>

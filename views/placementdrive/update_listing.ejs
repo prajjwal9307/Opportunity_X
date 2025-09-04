@@ -1,0 +1,148 @@
+<%layout("layout/placement/boilerplate.ejs")%>
+
+<body class="bg-light">
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4 sticky-top">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <a href="/placementdrive" class="btn btn-outline-secondary me-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="h4 mb-0 text-primary">
+                        <i class="fas fa-edit me-2"></i>Edit Job Listing
+                    </h1>
+                    <p class="text-muted mb-0">Update the job opportunity details</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Form -->
+    <div class="container py-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form id="editJobForm" action="/placementdrive/<%= updatedrive._id %>/edit?_method=PUT" method="POST" class="needs-validation" novalidate>
+                    
+                    <!-- Company Information Section -->
+                    <section class="mb-5">
+                        <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                            <i class="fas fa-building me-2"></i>Company Information
+                        </h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="companyname" class="form-label">Company Name <span class="text-danger">*</span></label>
+                                <input type="text" name="companyname" class="form-control" id="companyname"
+                                    value="<%= updatedrive.companyname %>" required>
+                                <div class="invalid-feedback">
+                                    Please provide the company name.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="companydetail" class="form-label">Company Details <span class="text-danger">*</span></label>
+                                <textarea name="companydetail" class="form-control" id="companydetail" rows="3" required><%= updatedrive.companydetail %></textarea>
+                                <div class="invalid-feedback">
+                                    Please describe the company.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Job Details Section -->
+                    <section class="mb-5">
+                        <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                            <i class="fas fa-briefcase me-2"></i>Job Details
+                        </h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="jobrole" class="form-label">Job Role <span class="text-danger">*</span></label>
+                                <input type="text" name="jobrole" class="form-control" id="jobrole"
+                                    value="<%= updatedrive.jobrole %>" required>
+                                <div class="invalid-feedback">
+                                    Please specify the job position.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="eligibility" class="form-label">Eligibility Criteria <span class="text-danger">*</span></label>
+                                <input type="text" name="eligibility" class="form-control" id="eligibility"
+                                    value="<%= updatedrive.eligibility %>" required>
+                                <div class="invalid-feedback">
+                                    Please specify eligibility criteria.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="package" class="form-label">Package (LPA) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="number" name="package" class="form-control" id="package" 
+                                        value="<%= updatedrive.package %>" min="0" step="0.01" required>
+                                    <span class="input-group-text">LPA</span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid package amount.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="applicationdeadline" class="form-label">Application Deadline <span class="text-danger">*</span></label>
+                                <input type="date" name="applicationdeadline" class="form-control" id="applicationdeadline"
+                                    value="<%= updatedrive.applicationdeadline.toISOString().split('T')[0] %>" required>
+                                <div class="invalid-feedback">
+                                    Please select a deadline date.
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="processofround" class="form-label">Hiring Process <span class="text-danger">*</span></label>
+                                <input type="text" name="processofround" class="form-control" id="processofround"
+                                    value="<%= updatedrive.processofround %>" required>
+                                <div class="invalid-feedback">
+                                    Please describe the hiring process.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Placement Drive Information -->
+                    <section class="mb-4">
+                        <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                            <i class="fas fa-calendar-alt me-2"></i>Placement Drive Information
+                        </h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="drivedate" class="form-label">Drive Date <span class="text-danger">*</span></label>
+                                <input type="date" name="drivedate" class="form-control" id="drivedate"
+                                    value="<%= updatedrive.drivedate.toISOString().split('T')[0] %>" required>
+                                <div class="invalid-feedback">
+                                    Please select a drive date.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="venue" class="form-label">Venue <span class="text-danger">*</span></label>
+                                <input type="text" name="venue" class="form-control" id="venue"
+                                    value="<%= updatedrive.venue %>" required>
+                                <div class="invalid-feedback">
+                                    Please provide the venue address.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Form Submission -->
+                    <div class="d-flex justify-content-between border-top pt-4">
+                        <button type="reset" class="btn btn-outline-secondary px-4">
+                            <i class="fas fa-undo me-2"></i>Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-save me-2"></i>Update Job Listing
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-side Validation Script -->
+     <script>
+        
+     </script>
+    <script src="/js/form_valid.js"></script>
+</body>
+</html>

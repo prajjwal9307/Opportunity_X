@@ -1,0 +1,32 @@
+<% layout("layout/placement/boilerplate.ejs") %>
+
+  <body>
+    <div class="container mt-5">
+      <h2 class="mb-4">Login</h2>
+
+      <form action="/login" method="POST">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" id="username" name="username" class="form-control" required>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+      <div class="text-center mt-3">
+        <a href="/auth/google" class="btn btn-danger w-100">
+          <i class="fab fa-google me-2"></i> Continue with Google
+        </a>
+      </div>
+
+      <p class="mt-3">
+        Don’t have an account? <a href="/signup">Sign up here</a>
+      </p>
+    </div>
+  </body>
