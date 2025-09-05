@@ -7,6 +7,7 @@ const express = require("express");
 
 
 const cors = require("cors");
+
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
 
@@ -31,7 +32,9 @@ const methodOverride = require("method-override");
 const User = require("./models/User/user.js")
 
 const app = express();
-
+app.use(cors({
+  origin: "*" 
+}));
 // Routing
 const placementdrive = require('./routes/placement/placement.js');
 const hackathon = require('./routes/hackathon/hackathon.js');
