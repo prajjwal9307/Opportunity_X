@@ -13,10 +13,12 @@
                             <p>A simple and modern platform to explore placement, academics, events, and student life.
                             </p>
                         </div>
-                        <div><a href="/login">
-                            <button class="btn btn-light">Sign up and Explore Now</button>
-                        </a>
-                            
+                        <div>
+                            <% if (!currentUser) { %>
+                                <a href="/login">
+                                    <button class="btn btn-light">Sign up and Explore Now</button>
+                                </a>
+                            <% } %>
                         </div>
                     </div>
                     <div class="first-img">
@@ -344,128 +346,129 @@
         }
 
         /* Responsive styles for max-width 550px */
-         @media (max-width: 550px) {
-        .first {
-            flex-direction: column;
-            max-height: none;
-            padding: 1.5rem;
-            gap: 2rem;
+        @media (max-width: 550px) {
+            .first {
+                flex-direction: column;
+                max-height: none;
+                padding: 1.5rem;
+                gap: 2rem;
+            }
+
+            .first-text {
+                padding-top: 1rem;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .first-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .first-img p {
+                font-size: 1.2rem;
+                transform: translate(1rem, 2rem);
+            }
+
+            .first-img img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .second {
+                padding: 1.5rem;
+            }
+
+            .second-part1 h1 {
+                font-size: 1.5rem;
+                text-align: center;
+            }
+
+            .second-part1-part1 {
+                height: auto;
+                flex-wrap: wrap;
+                padding: 0.5rem;
+                border-radius: 15px;
+            }
+
+            .second-part1-part1 ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .second-part1-part1 ul a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .second-part2 {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .second-part2-box1 {
+                display: none;
+            }
+
+            .second-part2-box2 {
+                width: 100% !important;
+                height: auto;
+                padding: 1.5rem;
+            }
+
+            .box1-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .image-container {
+                flex-direction: column;
+            }
+
+            .image-wrapper {
+                margin-bottom: 1rem;
+            }
+
+            .image {
+                height: 10rem;
+            }
+
+            .third {
+                padding: 1.5rem;
+            }
+
+            .third h1 {
+                font-size: 1.8rem;
+            }
+
+            .third .lead {
+                font-size: 1rem;
+            }
+
+            .third-img {
+                height: 18rem;
+                width: 14rem;
+                min-width: 14rem;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+                position: relative;
+            }
+
+            .footer-left,
+            .footer-right {
+                margin-bottom: 0.5rem;
+            }
+
+            .footer a {
+                margin: 0 0.5rem;
+                display: inline-block;
+            }
         }
-        
-        .first-text {
-            padding-top: 1rem;
-            text-align: center;
-            gap: 1.5rem;
-        }
-        
-        .first-text h1 {
-            font-size: 1.8rem;
-        }
-        
-        .first-img p {
-            font-size: 1.2rem;
-            transform: translate(1rem, 2rem);
-        }
-        
-        .first-img img {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        .second {
-            padding: 1.5rem;
-        }
-        
-        .second-part1 h1 {
-            font-size: 1.5rem;
-            text-align: center;
-        }
-        
-        .second-part1-part1 {
-            height: auto;
-            flex-wrap: wrap;
-            padding: 0.5rem;
-            border-radius: 15px;
-        }
-        
-        .second-part1-part1 ul {
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .second-part1-part1 ul a {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-        
-        .second-part2 {
-            flex-direction: column;
-            gap: 2rem;
-        }
-        
-        .second-part2-box1{
-            display: none;
-        }
-        .second-part2-box2 {
-            width: 100% !important;
-            height: auto;
-            padding: 1.5rem;
-        }
-        
-        .box1-header {
-            flex-direction: column;
-            gap: 1rem;
-            text-align: center;
-        }
-        
-        .image-container {
-            flex-direction: column;
-        }
-        
-        .image-wrapper {
-            margin-bottom: 1rem;
-        }
-        
-        .image {
-            height: 10rem;
-        }
-        
-        .third {
-            padding: 1.5rem;
-        }
-        
-        .third h1 {
-            font-size: 1.8rem;
-        }
-        
-        .third .lead {
-            font-size: 1rem;
-        }
-        
-        .third-img {
-            height: 18rem;
-            width: 14rem;
-            min-width: 14rem;
-        }
-        
-        .footer {
-            flex-direction: column;
-            text-align: center;
-            padding: 1rem;
-            position: relative;
-        }
-        
-        .footer-left, 
-        .footer-right {
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer a {
-            margin: 0 0.5rem;
-            display: inline-block;
-        }
-    }
     </style>
     <script>
         // Feature data

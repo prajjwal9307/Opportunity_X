@@ -160,7 +160,7 @@
                                   <i class="far fa-comment me-1"></i>Reply
                                 </button>
                                 <% if ( currentUser && ( currentUser.role==="admin" ||
-                                  currentUser._id.toString()===comment.author._id.toString() ) ) { %>
+                                  currentUser._id.toString()===comment.author._id.toString() || currentUser._id.toString()===experiance.author.toString()) ) { %>
                                   <a href="/experiance/<%=experiance._id%>/<%=comment._id %>/delete"
                                     class="btn btn-sm btn-outline-danger ms-auto">
                                     <i class="far fa-trash-alt"></i>

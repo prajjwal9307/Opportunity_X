@@ -71,20 +71,27 @@ module.exports.detailslisting=async (req, res) => {
 };
 module.exports.upvote=async (req, res) => {
 
+    
     let { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new ExpressError(400, "Invalid InterviewExperience ID format");
     }
+
     const experience = await InterviewExperience.findById(id);
     if (!experience) {
         throw new ExpressError(404, "InterviewExperience not found");
     }
+    if(experience.upvotedBy.includes(res.locals.currentUser._id)){
+        req.flash("error", "You have already upvoted this post");
+        res.redirect(`/experiance/all`);
+        return;
+    }
 
     experience.upvotes += 1;
-    await experience.save();
+    experience.upvotedBy.push(res.locals.currentUser._id);
     req.flash("success", "You like this post!");
+    await experience.save();
     res.redirect(`/experiance/all`);
-
 }
 module.exports.comment=async (req, res) => {
 
@@ -157,7 +164,7 @@ module.exports.destroycomment=async (req, res) => {
     let comment = await Comment.findById(commentid);
     let commentAuthor = comment.author;
 
-    if (!commentAuthor || (commentAuthor.toString() !== res.locals.currentUser._id.toString() && res.locals.currentUser.role!=="admin")) {
+    if (!commentAuthor || (commentAuthor.toString() !== res.locals.currentUser._id.toString() && res.locals.currentUser.role!=="admin" && experience.author.toString() !== res.locals.currentUser._id.toString())) {
         req.flash("error", "Only owner can delete this comment");
         return res.redirect("/experiance/all");
     }

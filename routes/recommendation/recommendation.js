@@ -34,7 +34,7 @@ async function matchUsersToCompaniesAndNotify() {
             // Match logic: check intersection of skills
             const matchedSkills = [...userSkills].filter(skill => companySkills.has(skill));
 
-            if (matchedSkills.length > 0) {
+            if (matchedSkills.length > 4) {
                 // Send email
                 await transporter.sendMail({
                     from: 'prajjwalraut226@gmail.com',
@@ -44,7 +44,7 @@ async function matchUsersToCompaniesAndNotify() {
                         <h3>Hi ${user.firstname},</h3>
                         <p>You are eligible to apply for the position <strong>${company.jobrole}</strong> at <strong>${company.companyname}</strong>.</p>
                         <p>Matched Skills: ${matchedSkills.join(', ')}</p>
-                        <p>Check more details and apply soon! <a href="http://localhost:8080/placementdrive/${company._id}">Click here</a></p>
+                        <p>Check more details and apply soon! <a href="https://opportunityx-f72a.onrender.com/placementdrive/${company._id}">Click here</a></p>
                     `
                 });
                 console.log(`Email sent to: ${user.author.email}`);
