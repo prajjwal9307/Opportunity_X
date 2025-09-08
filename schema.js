@@ -129,7 +129,8 @@ const hackathonSchema=Joi.object({
     }),
     otherwise: Joi.string().allow('')
   }),
-  group_member:Joi.number().required(),
+  min_member:Joi.number().required(),
+  max_member:Joi.number().required(),
   regiterteam: Joi.array().items(Joi.string()),
   createdAt: Joi.date()
 })

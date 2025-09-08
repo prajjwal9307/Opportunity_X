@@ -12,7 +12,7 @@ module.exports.addlisting_post=async (req, res) => {
     if(error){
         throw new ExpressError(404,error.message);
     }
-    let { title, date, type, theme, skills, venue, group_member } = req.body;
+    let { title, date, type, theme, skills, venue, min_member,max_member } = req.body;
 
     const skillsArray = Array.isArray(skills)
         ? skills
@@ -20,16 +20,21 @@ module.exports.addlisting_post=async (req, res) => {
             ? skills.split(',').map(s => s.trim())
             : [];
 
+          
     const newhackthon = new Hackathon({
+        
         title: title,
         date: date,
         type: type,
         theme: theme,
         skills: skillsArray,
         venue: venue,
-        group_member: group_member
+        group_member: {
+            min_member,
+            max_member
+        }
     });
-
+    
     await newhackthon.save();
     req.flash("success","New hackathon add successfully!");
     res.redirect("/hackathon/all")
@@ -95,6 +100,7 @@ module.exports.applylisting_post=async (req, res) => {
         teamMembers: teamMembers,
         hackathonId: hackathonId
     })
+    newregister.author = res.locals.currentUser._id;
     await newregister.save();
 
 

@@ -22,7 +22,7 @@ const hackathonSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  skills:{
+  skills: {
     type: [String],
   },
   venue: {
@@ -31,12 +31,19 @@ const hackathonSchema = new mongoose.Schema({
     trim: true
   },
   group_member: {
-    type: Number,
-    required: true
+    min_member: {
+      type: Number,
+      default: 1
+    },
+    max_member: {
+      type: Number,
+      default: 5
+    },
   },
+
   regiterteam: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Registration', 
+    ref: 'Registration',
   }],
   createdAt: {
     type: Date,

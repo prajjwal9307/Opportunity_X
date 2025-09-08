@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const registrationSchema = new mongoose.Schema({
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     teamName: {
         type: String,
         required: [true, 'Team name is required'],
@@ -16,7 +21,7 @@ const registrationSchema = new mongoose.Schema({
         type: [String],
         required: [true, 'At least one team member is required'],
         validate: {
-            validator: function(members) {
+            validator: function (members) {
                 return members.length >= 1; // Minimum 1 team member (leader plus others)
             },
             message: 'At least one team member is required'

@@ -1,11 +1,9 @@
+<% layout("layout/placement/boilerplate.ejs") %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hackathon Team Registration</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -62,14 +60,14 @@
             <div class="registration-header">
                 <h2><i class="fas fa-users me-2"></i> Team Registration</h2>
                 <p class="mb-0">Register your team for <%= hackathon.title %></p>
-                <p class="mt-2 mb-0"><small>Team size limit: <%= hackathon.group_member %> members</small></p>
+                <p class="mt-2 mb-0"><small>Team size limit: <%= hackathon.group_member.min_member %> - <%= hackathon.group_member.max_member %> members</small></p>
             </div>
             
             <div class="form-section">
                 <form id="registrationForm" action="/hackathon/<%= hackathon._id %>/register" method="POST" class="needs-validation" novalidate>
                     <!-- Hidden fields -->
                     <input type="hidden" name="hackathonId" value="<%= hackathon._id %>">
-                    <input type="hidden" id="maxMembers" value="<%= hackathon.group_member %>">
+                    <input type="hidden" id="maxMembers" value="<%= hackathon.group_member.max_member %>">
                     
                     <!-- Team Name -->
                     <div class="mb-4">
@@ -117,7 +115,7 @@
                         </label>
                         <div id="teamMembersContainer" class="mb-2"></div>
                         <div class="input-group mb-2">
-                            <input type="text" class="form-control" id="newMember" placeholder="Add team member name" required>
+                            <input type="text" class="form-control" id="newMember" placeholder="Add team member name">
                             <button class="btn btn-primary" type="button" id="addMemberBtn">
                                 <i class="fas fa-plus"></i> Add
                             </button>

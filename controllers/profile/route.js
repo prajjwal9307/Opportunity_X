@@ -1,17 +1,19 @@
 const Student = require("../../models/Student/profile.js");
 const experiance = require("../../models/expsharing.js");
 const Application=require("../../models/application.js");
+const Registration=require("../../models/Hackathon/register.js");
 
 module.exports.profile_get=async (req, res) => {
   let id = req.params.id;
   let student = await Student.findOne({ author: id })
   let experiances = await experiance.find({ author: id });
   let applications=await Application.find({author:id}).populate("companyId");
+  let hackathons=await Registration.find({author:id}).populate("hackathonId");
   if (!student) {
     student = new Student({ author: id });
     await student.save();
   }
-  res.render("Student/profile.ejs", { student,experiances,applications})
+  res.render("Student/profile.ejs", { student,experiances,applications,hackathons});
 };
 
 module.exports.profile_post=async (req, res) => {

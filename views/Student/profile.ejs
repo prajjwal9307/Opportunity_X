@@ -97,7 +97,7 @@
       </div>
     </div>
 
-    <!-- Experience & Applied Jobs -->
+    <!-- Experience & Applied Jobs & Hackathons -->
     <div class="row">
       <!-- Experience -->
       <div class="col-md-6">
@@ -151,6 +151,29 @@
               </div>
             <% } else { %>
               <p class="text-muted">No jobs applied yet.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Applied Hackathons -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Applied Hackathons</h5>
+          </div>
+          <div class="card-body">
+            <% if (hackathons && hackathons.length > 0) { %>
+              <div class="list-group">
+                <% hackathons.forEach(appli => { %>
+                  <a href="/hackathon/<%=appli.hackathonId._id%>" class="list-group-item list-group-item-action">
+                    <h6 class="mb-1">Hackathon name: <%=appli.hackathonId.title%> || Teamname: <%=appli.teamName%> </h6>
+                    <p class="mb-1">Type: <%=appli.hackathonId.type%></p>
+                  </a>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No Hackathons applied yet.</p>
             <% } %>
           </div>
         </div>

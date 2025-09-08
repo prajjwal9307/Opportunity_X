@@ -86,12 +86,11 @@
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Team Size <span class="text-danger">*</span></label>
                                 <div class="d-flex align-items-center">
-                                    <span class="me-2">1</span>
-                                    <input type="range" class="form-range flex-grow-1 mx-3" min="1" max="5" value="1" 
-                                        id="groupRange" name="group_member"
-                                        oninput="document.getElementById('groupValue').textContent = this.value">
-                                    <span class="ms-2">5</span>
-                                    <span id="groupValue" class="badge bg-primary ms-3 fs-6">1</span>
+                                        <p>Min Member : </p>
+                                        <input type="number" min="1" max="5" value="1"  name="min_member" style="margin-right: 3vw">
+
+                                        <p>Max Member : </p>
+                                        <input type="number" min="1" max="10" value="1"  name="max_member">
                                 </div>
                             </div>
 

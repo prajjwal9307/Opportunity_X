@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Online Compiler</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&display=swap"
@@ -205,6 +206,69 @@
       color: #dc2626;
     }
 
+    @media (max-width: 1024px) {
+      body {
+        flex-direction: column;
+        height: auto;
+        overflow: auto;
+      }
+
+      .question-panel,
+      .compiler-panel {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .compiler-panel {
+        padding: 1rem;
+      }
+
+      .compiler-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+
+      .code-editor {
+        height: 300px;
+        /* fixed height for textarea */
+        flex-grow: 0;
+        /* stop flex override */
+      }
+
+      textarea {
+        height: 100%;
+        /* fill editor box */
+      }
+
+      .output-container {
+        margin-top: 1rem;
+        flex: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .question-title {
+        font-size: 1.4rem;
+      }
+
+      .compiler-title {
+        font-size: 1.2rem;
+      }
+
+      button,
+      select {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+      }
+
+      .code-editor {
+        height: 250px;
+        /* smaller on phones */
+      }
+    }
   </style>
 </head>
 
@@ -284,7 +348,6 @@
       <h3>Soulution</h3>
       <%=question.solution%>
     </div>
-
   </div>
 
   <!-- Right Panel - Compiler -->
@@ -294,13 +357,15 @@
     </div>
 
     <div class="compiler-controls">
-      <label for="language">Language:</label>
-      <select id="language">
-        <option value="62">Java (OpenJDK 17)</option>
-        <option value="71">Python (3.8.1)</option>
-        <option value="54">C++ (GCC 9.2)</option>
-        <option value="63">JavaScript (Node.js 12.14)</option>
-      </select>
+      <div>
+        <label for="language">Language:</label>
+        <select id="language">
+          <option value="62">Java (OpenJDK 17)</option>
+          <option value="71">Python (3.8.1)</option>
+          <option value="54">C++ (GCC 9.2)</option>
+          <option value="63">JavaScript (Node.js 12.14)</option>
+        </select>
+      </div>
 
       <button onclick="runCode()">Run Code</button>
     </div>

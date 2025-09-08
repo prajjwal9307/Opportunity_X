@@ -1,11 +1,9 @@
+<%layout("layout/placement/boilerplate.ejs") %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= hackathon.title %> Details</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -80,6 +78,14 @@
             font-size: 0.8rem;
             color: #666;
             text-transform: uppercase;
+        }
+        @media(max-width: 700px) {
+            .btn-group{
+                flex-direction: column;
+            }
+            .btn-group a{
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -170,24 +176,30 @@
 
                 <div>
                     <div class="detail-label">
-                        <i class="fa-solid fa-user-group"></i> Group Menber <%=hackathon.group_member%>
+                        <i class="fa-solid fa-user-group"></i> Min Member: <%= hackathon.group_member.min_member %>
                     </div>
-                    
+                    <div class="detail-label">
+                        <i class="fa-solid fa-user-group"></i> Max Member: <%= hackathon.group_member.max_member %>
+                    </div>
                 </div>
                 <hr>
                 
                 <!-- Action Buttons -->
                 <div class="action-buttons d-flex justify-content-between">
-                    <a href="/hackathon/all" class="btn btn-outline-secondary">
+                    <div>
+                        <a href="/hackathon/all" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Back to List
                     </a>
-                    <div>
-                        <a href="/hackathon/<%= hackathon._id %>/findteammate" class="btn btn-success">
-                            <i class="bi bi-person-plus"></i> Find Team-Mate
-                        </a>
+                    </div>
+                    
+                    <div class="btn-group gap-4">
                         <a href="/hackathon/<%= hackathon._id %>/register" class="btn btn-success">
                             <i class="bi bi-person-plus"></i> Register Now
                         </a>
+                        <a href="/hackathon/<%= hackathon._id %>/findteammate" class="btn btn-success">
+                            <i class="bi bi-person-plus"></i> Find Team-Mate
+                        </a>
+                        
                     </div>
                 </div>
             </div>
